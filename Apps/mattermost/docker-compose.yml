@@ -1,0 +1,116 @@
+# Configuration for big-bear-mattermost
+name: big-bear-mattermost
+
+services:
+  # Fixes ownership on the host bind mounts before Mattermost starts.
+  # The Mattermost image runs as uid 2000 and cannot write to root-owned dirs,
+  # which is the #1 cause of "works for me, crash-loops on a fresh install".
+  mm-permissions:
+    image: busybox:stable@sha256:73aaf090f3d85aa34ee199857f03fa3a95c8ede2ffd4cc2cdb5b94e566b11662
+    container_name: big-bear-mattermost-permissions
+    user: "0:0"
+    command: >-
+      /bin/sh -c "mkdir -p /mm/config /mm/data /mm/logs /mm/plugins /mm/client-plugins
+      && chown -R 2000:2000 /mm"
+    volumes:
+      - /DATA/AppData/$AppID/config:/mm/config
+      - /DATA/AppData/$AppID/data:/mm/data
+      - /DATA/AppData/$AppID/logs:/mm/logs
+      - /DATA/AppData/$AppID/plugins:/mm/plugins
+      - /DATA/AppData/$AppID/client-plugins:/mm/client-plugins
+    restart: "no"
+    networks:
+      - big_bear_mattermost_network
+
+  database:
+    image: postgres:16-alpine@sha256:0cefaabd882e42bcb2a2f3dc56d3ce4770560ba62fd7f197f1a2e008fd5731ab
+    container_name: big-bear-mattermost-database
+    environment:
+      POSTGRES_USER: mmuser
+      POSTGRES_PASSWORD: changeme-mattermost-db
+      POSTGRES_DB: mattermost
+    volumes:
+      - /DATA/AppData/$AppID/database:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U mmuser -d mattermost"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+    networks:
+      - big_bear_mattermost_network
+
+  mattermost:
+    image: mattermost/mattermost-team-edition:release-12@sha256:be30cae64d57617b303fc97d398f3671f39424862c8bf71e95a0bf83dcd9711f
+    container_name: big-bear-mattermost
+    depends_on:
+      mm-permissions:
+        condition: service_completed_successfully
+      database:
+        condition: service_healthy
+    ports:
+      - 8065:8065
+    volumes:
+      - /DATA/AppData/$AppID/config:/mattermost/config
+      - /DATA/AppData/$AppID/data:/mattermost/data
+      - /DATA/AppData/$AppID/logs:/mattermost/logs
+      - /DATA/AppData/$AppID/plugins:/mattermost/plugins
+      - /DATA/AppData/$AppID/client-plugins:/mattermost/client/plugins
+    environment:
+      MM_SQLSETTINGS_DRIVERNAME: postgres
+      MM_SQLSETTINGS_DATASOURCE: postgres://mmuser:changeme-mattermost-db@database:5432/mattermost?sslmode=disable&connect_timeout=10
+      MM_FILESETTINGS_DIRECTORY: /mattermost/data
+      # Leave Site URL unset: the first-run wizard asks for it, and it must match
+      # whatever address the user opens (http://192.168.1.10:8065, a hostname, etc).
+      # Setting it to the wrong value breaks websockets and push deep links.
+      MM_SERVICESETTINGS_ENABLELOCALMODE: "true"
+    restart: unless-stopped
+    networks:
+      - big_bear_mattermost_network
+
+networks:
+  big_bear_mattermost_network:
+    name: big_bear_mattermost_network
+    driver: bridge
+
+x-casaos:
+  architectures:
+    - amd64
+    - arm64
+  main: mattermost
+  index: /
+  port_map: "8065"
+  scheme: http
+  id: com.zimahomelab.mattermost
+  icon: icon.svg
+  category: Productivity
+  version: "12.1.0"
+  update_at: "2026-10-30"
+  author: ZimaHomelab
+  developer: Mattermost
+  website: https://mattermost.com
+  repo: https://github.com/mattermost/mattermost
+  docs: https://docs.mattermost.com
+  title:
+    en_US: Mattermost
+  tagline:
+    en_US: Self-hosted team messaging with PostgreSQL
+  description:
+    en_US: >-
+      Mattermost Team Edition is an open-source, self-hosted Slack alternative.
+      This app bundles the server with PostgreSQL, fixes volume ownership on
+      first install, and keeps all data under AppData. Includes threads, file
+      sharing, search, slash commands, bots and webhooks, and mobile push through
+      Mattermost's push proxy.
+  tips:
+    before_install:
+      en_US: >-
+        Allow 2 GB of RAM. First start runs database migrations for 30-90 seconds;
+        a crash loop during that window is normal if you restart it too early.
+    after_install:
+      en_US: >-
+        The first account created becomes System Admin. Then set the Site URL in
+        System Console -> Site Configuration to the exact address you use in the
+        browser, or websockets and push deep links will misbehave. Change the
+        database password in the app's environment before storing anything
+        important.

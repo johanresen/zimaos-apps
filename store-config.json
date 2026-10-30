@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "store_id": "zimahomelab-apps",
+  "name": {
+    "en_US": "ZimaHomelab Apps"
+  },
+  "description": {
+    "en_US": "Self-hosted apps packaged for ZimaOS and CasaOS, maintained for a single homelab and shared in case they are useful."
+  },
+  "maintainer": "johanresen",
+  "url": "https://github.com/johanresen/zimaos-apps"
+}
