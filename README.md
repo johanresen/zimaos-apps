@@ -10,6 +10,7 @@ README that tells a human what to do after the install button.
 | App | Description | Port |
 |---|---|---|
 | [Mattermost](Apps/mattermost) | Self-hosted team chat with PostgreSQL, threads, files, bots | 8065 |
+| [Mattermost (8067)](Apps/mattermost-8067) | Same app on host port 8067, for running alongside an existing install | 8067 |
 
 ## Add this store to ZimaOS
 
