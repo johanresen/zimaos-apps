@@ -1,0 +1,29 @@
+{
+  "architectures": [
+    "amd64"
+  ],
+  "category": "Productivity",
+  "update_at": "2026-10-30",
+  "author": "ZimaHomelab",
+  "developer": "Mattermost",
+  "website": "https://mattermost.com",
+  "repo": "https://github.com/mattermost/mattermost",
+  "docs": "https://docs.mattermost.com",
+  "tagline": "Self-hosted team messaging with PostgreSQL",
+  "description": "Mattermost Team Edition is an open-source, self-hosted Slack alternative. This app bundles the server with PostgreSQL, fixes volume ownership on first install, and keeps all data under AppData. Includes threads, file sharing, search, slash commands, bots and webhooks, and mobile push through Mattermost's push proxy.",
+  "tips": {
+    "before_install": "Allow 2 GB of RAM. First start runs database migrations for 30-90 seconds; a crash loop during that window is normal if you restart it too early.",
+    "after_install": "The first account created becomes System Admin. Then set the Site URL in System Console -> Site Configuration to the exact address you use in the browser, or websockets and push deep links will misbehave. Change the database password in the app's environment before storing anything important."
+  },
+  "title": "Mattermost",
+  "base_url": "https://cdn.jsdelivr.net/gh/johanresen/zimaos-apps@gh-pages",
+  "id": "com.zimahomelab.mattermost",
+  "version": "12.1.0",
+  "categories": [
+    "productivity"
+  ],
+  "min_memory": 0,
+  "min_image_size": {
+    "amd64": 612937514
+  }
+}

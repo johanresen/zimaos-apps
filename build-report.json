@@ -1,0 +1,56 @@
+{
+  "title": "Build V2 Store Report",
+  "kind": "build-v2",
+  "status": "success",
+  "started_at": "2026-10-31T01:18:28.154920+00:00",
+  "finished_at": "2026-10-31T01:18:30.557380+00:00",
+  "summary": {
+    "apps_total": 2,
+    "apps_built": 2,
+    "apps_failed": 0,
+    "apps_skipped": 0,
+    "issues_total": 0,
+    "errors_total": 0,
+    "warnings_total": 0,
+    "dist_exists": true,
+    "locales_total": 1,
+    "digest_cache_entries_loaded": 0,
+    "digest_cache_hits": 0,
+    "digest_cache_misses": 0,
+    "size_cache_entries_loaded": 0,
+    "size_cache_hits": 3,
+    "size_cache_misses": 3
+  },
+  "context": {
+    "repo": "johanresen/zimaos-apps",
+    "ref": "refs/heads/main",
+    "sha": "a66812da15faed4375a9c6050da579ffd517dfe8",
+    "trigger": "push",
+    "source": "/home/runner/work/zimaos-apps/zimaos-apps",
+    "output": "/home/runner/work/zimaos-apps/zimaos-apps/dist",
+    "base_url": "https://cdn.jsdelivr.net/gh/johanresen/zimaos-apps@gh-pages"
+  },
+  "issues": [],
+  "artifacts": [
+    {
+      "name": "build-v2-report.json",
+      "path": "/home/runner/work/zimaos-apps/zimaos-apps/dist/build-report.json",
+      "note": "Upload this file as a workflow artifact for debugging and summary rendering."
+    },
+    {
+      "name": "dist",
+      "path": "/home/runner/work/zimaos-apps/zimaos-apps/dist",
+      "note": "Upload the generated v2 store output as a workflow artifact."
+    },
+    {
+      "name": "metadata.tar.gz",
+      "path": "/home/runner/work/zimaos-apps/zimaos-apps/dist/metadata.tar.gz",
+      "note": "Bootstrap bundle containing generated JSON/YML metadata files for first-time store caching."
+    },
+    {
+      "name": "metadata.sha256",
+      "path": "/home/runner/work/zimaos-apps/zimaos-apps/dist/metadata.sha256",
+      "note": "SHA-256 checksum for the bootstrap metadata bundle."
+    }
+  ]
+}

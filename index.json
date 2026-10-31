@@ -1,0 +1,48 @@
+{
+  "version": 2,
+  "updated_at": "2026-10-31T01:18:30Z",
+  "app_count": 2,
+  "base_url": "https://cdn.jsdelivr.net/gh/johanresen/zimaos-apps@gh-pages",
+  "apps": [
+    {
+      "id": "com.zimahomelab.mattermost",
+      "title": "Mattermost",
+      "tagline": "Self-hosted team messaging with PostgreSQL",
+      "category": "Productivity",
+      "categories": [
+        "productivity"
+      ],
+      "author": "ZimaHomelab",
+      "developer": "Mattermost",
+      "architectures": [
+        "amd64"
+      ],
+      "icon": "/apps/com.zimahomelab.mattermost/assets/icon.svg",
+      "thumbnail": "",
+      "compose_url": "/apps/com.zimahomelab.mattermost/docker-compose.yml",
+      "meta_url": "/apps/com.zimahomelab.mattermost/meta.json",
+      "content_hash": "5c844b51",
+      "version": "12.1.0"
+    },
+    {
+      "id": "com.zimahomelab.mattermost-8067",
+      "title": "Mattermost (8067)",
+      "tagline": "Self-hosted team messaging with PostgreSQL",
+      "category": "Productivity",
+      "categories": [
+        "productivity"
+      ],
+      "author": "ZimaHomelab",
+      "developer": "Mattermost",
+      "architectures": [
+        "amd64"
+      ],
+      "icon": "/apps/com.zimahomelab.mattermost-8067/assets/icon.svg",
+      "thumbnail": "",
+      "compose_url": "/apps/com.zimahomelab.mattermost-8067/docker-compose.yml",
+      "meta_url": "/apps/com.zimahomelab.mattermost-8067/meta.json",
+      "content_hash": "e9586449",
+      "version": "12.1.0"
+    }
+  ]
+}
