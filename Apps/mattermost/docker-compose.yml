@@ -5,20 +5,32 @@ services:
   # Fixes ownership on the host bind mounts before Mattermost starts.
   # The Mattermost image runs as uid 2000 and cannot write to root-owned dirs,
   # which is the #1 cause of "works for me, crash-loops on a fresh install".
+  #
+  # It deliberately stays running after the chown: ZimaOS/CasaOS force
+  # `restart: always` on every container in an app, so a helper that exits 0
+  # gets restarted in a loop and never satisfies `service_completed_successfully`
+  # — which leaves the main container stuck in `Created`. Idling + healthcheck
+  # is the only ordering signal that survives that.
   mm-permissions:
     image: busybox:stable@sha256:73aaf090f3d85aa34ee199857f03fa3a95c8ede2ffd4cc2cdb5b94e566b11662
     container_name: big-bear-mattermost-permissions
     user: "0:0"
     command: >-
       /bin/sh -c "mkdir -p /mm/config /mm/data /mm/logs /mm/plugins /mm/client-plugins
-      && chown -R 2000:2000 /mm"
+      && chown -R 2000:2000 /mm && exec tail -f /dev/null"
+    healthcheck:
+      test: ["CMD-SHELL", "test -w /mm/config && test -w /mm/data && test -w /mm/logs"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+      start_period: 2s
     volumes:
       - /DATA/AppData/$AppID/config:/mm/config
       - /DATA/AppData/$AppID/data:/mm/data
       - /DATA/AppData/$AppID/logs:/mm/logs
       - /DATA/AppData/$AppID/plugins:/mm/plugins
       - /DATA/AppData/$AppID/client-plugins:/mm/client-plugins
-    restart: "no"
+    restart: unless-stopped
     networks:
       - big_bear_mattermost_network
 
@@ -45,7 +57,7 @@ services:
     container_name: big-bear-mattermost
     depends_on:
       mm-permissions:
-        condition: service_completed_successfully
+        condition: service_healthy
       database:
         condition: service_healthy
     ports:
