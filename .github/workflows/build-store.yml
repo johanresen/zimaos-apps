@@ -34,13 +34,17 @@ jobs:
           root = pathlib.Path(".")
           out = pathlib.Path("dist/store.zip")
           out.parent.mkdir(parents=True, exist_ok=True)
-          skip = {".git", "dist"}
+          skip = {"dist"}
           with zipfile.ZipFile(out, "w", zipfile.ZIP_DEFLATED) as z:
               for p in sorted(root.rglob("*")):
                   if p.is_dir():
                       continue
                   rel = p.relative_to(root).as_posix()
-                  if rel.split("/")[0] in skip or rel == "store.zip":
+                  head = rel.split("/")[0]
+                  if head in skip or rel == "store.zip":
+                      continue
+                  # keep .github/ (harmless, documents the build), drop other dotfiles/dirs
+                  if head.startswith(".") and head != ".github":
                       continue
                   z.write(p, rel)
           print("store.zip entries:", zipfile.ZipFile(out).namelist())
