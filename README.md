@@ -17,7 +17,7 @@ A v2 store is consumed as a generated `store.json`, not as a bare repository. Af
 first CI run publishes the `gh-pages` branch, the source URL is:
 
 ```
-https://cdn.jsdelivr.net/gh/<your-user>/zimaos-apps@gh-pages/store.json
+https://cdn.jsdelivr.net/gh/johanresen/zimaos-apps@gh-pages/store.json
 ```
 
 1. **App Store → ⋯ (top right) → Add app source** (older builds: *Add third-party store*).
