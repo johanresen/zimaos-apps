@@ -27,6 +27,25 @@ jobs:
           base-url: https://cdn.jsdelivr.net/gh/${{ github.repository }}@gh-pages
           report-json: dist/build-report.json
 
+      - name: Package CasaOS-compatible store.zip
+        run: |
+          python3 - <<'PY'
+          import pathlib, zipfile
+          root = pathlib.Path(".")
+          out = pathlib.Path("dist/store.zip")
+          out.parent.mkdir(parents=True, exist_ok=True)
+          skip = {".git", "dist"}
+          with zipfile.ZipFile(out, "w", zipfile.ZIP_DEFLATED) as z:
+              for p in sorted(root.rglob("*")):
+                  if p.is_dir():
+                      continue
+                  rel = p.relative_to(root).as_posix()
+                  if rel.split("/")[0] in skip or rel == "store.zip":
+                      continue
+                  z.write(p, rel)
+          print("store.zip entries:", zipfile.ZipFile(out).namelist())
+          PY
+
       - name: Publish to gh-pages
         uses: peaceiris/actions-gh-pages@v4
         with:
