@@ -75,8 +75,9 @@ networks:
 
 x-casaos:
   architectures:
+    # Mattermost Team Edition publishes amd64 only — its manifest has no arm64
+    # entry, and the store build validates this against the image.
     - amd64
-    - arm64
   main: mattermost
   index: /
   port_map: "8065"
