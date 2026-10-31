@@ -5,3 +5,6 @@ build-report.json
 # local test artifacts
 *.log
 .DS_Store
+
+# build artifact — CI publishes it to gh-pages
+store.zip
